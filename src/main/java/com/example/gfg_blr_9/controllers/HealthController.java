@@ -4,7 +4,9 @@ import com.example.gfg_blr_9.annotations.InitSalary;
 import com.example.gfg_blr_9.annotations.JsonSerializableField;
 import com.example.gfg_blr_9.models.Employee;
 import com.example.gfg_blr_9.models.Records;
+import com.example.gfg_blr_9.services.RedisDriver;
 import com.example.gfg_blr_9.services.UserService;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,13 +23,22 @@ import java.lang.reflect.Method;
 @Slf4j
 @RestController
 public class HealthController {
+
+
+
     private static final Logger log = LoggerFactory.getLogger(HealthController.class);
     @Autowired // Field Injection
     private UserService userService;
 
+
+    @Autowired
+    private RedisDriver redisDriver;
+
     public HealthController(){
         log.info("HealthController getting initiated");
     }
+
+
 
     /*@Autowired // Constructor Injection -> required dependecies
     public HealthController(UserService userService){
