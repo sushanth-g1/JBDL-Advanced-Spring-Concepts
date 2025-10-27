@@ -3,7 +3,6 @@ package com.example.gfg_blr_9.controllers;
 import com.example.gfg_blr_9.models.Student;
 import com.example.gfg_blr_9.models.StudentInfo;
 import com.example.gfg_blr_9.services.StudentService;
-import jakarta.persistence.GeneratedValue;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,6 +26,10 @@ public class StudentController {
     @GetMapping("/students")
     public List<Student> getAllStudents(@RequestParam(name = "name") String firstName){
         return studentService.findByFirstName(firstName);
+    }
+    @GetMapping("/student/contact")
+    public StudentInfo getStudent(@RequestParam(name = "id") Long contactId){
+        return studentService.findByContact(contactId);
     }
 
 }
