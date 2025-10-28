@@ -17,20 +17,20 @@ public class Student {
     @Column (name= "first_name")
     private String firstName;
 
-    public List<Course> getCourseList() {
-        return courseList;
-    }
-
-    public void setCourseList(List<Course> courseList) {
-        this.courseList = courseList;
-    }
-    @ManyToMany
-    @JoinTable(
-            name = "course_students",
-            joinColumns = @JoinColumn(name = "id",referencedColumnName = "student_id"),
-            inverseJoinColumns = @JoinColumn(name = "id", referencedColumnName = "course_id")
-    )
-    private List<Course> courseList;
+//    public List<Course> getCourseList() {
+//        return courseList;
+//    }
+//
+//    public void setCourseList(List<Course> courseList) {
+//        this.courseList = courseList;
+//    }
+//    @ManyToMany
+//    @JoinTable(
+//            name = "course_students",
+//            joinColumns = @JoinColumn(name = "id",referencedColumnName = "student_id"),
+//            inverseJoinColumns = @JoinColumn(name = "id", referencedColumnName = "course_id")
+//    )
+//    private List<Course> courseList;
 
 
     public StudentContact getContact() {

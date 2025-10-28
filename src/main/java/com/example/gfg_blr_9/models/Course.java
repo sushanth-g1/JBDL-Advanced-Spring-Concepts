@@ -5,9 +5,9 @@ import lombok.Data;
 
 import java.util.List;
 
-@Entity
-@Table(name = "courses")
-@Data
+//@Entity
+//@Table(name = "courses")
+//@Data
 public class Course {
     public Long getId() {
         return id;
@@ -25,12 +25,12 @@ public class Course {
         this.name = name;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
 
-    @ManyToMany(mappedBy = "courseList")
+//    @ManyToMany(mappedBy = "courseList")
     private List<Student> students;
 
 }
