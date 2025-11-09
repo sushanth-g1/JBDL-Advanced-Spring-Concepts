@@ -1,23 +1,24 @@
 package com.example.gfg_blr_9.controllers;
 
-import com.example.gfg_blr_9.models.LibraryUser;
-import com.example.gfg_blr_9.models.LoginRequest;
-import com.example.gfg_blr_9.models.RegistrationRequest;
+import com.example.gfg_blr_9.models.*;
 import com.example.gfg_blr_9.services.LibraryUserService;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class UserController {
 
     private final LibraryUserService libraryUserService;
-
+    private ObjectMapper objectMapper = new ObjectMapper();
     @Autowired
     public UserController(LibraryUserService libraryUserService){
         this.libraryUserService = libraryUserService;
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
 //    @PostMapping("/v1/digitalLibrary/login")
@@ -44,6 +45,24 @@ public class UserController {
         }
         return ResponseEntity.ok("User Registered Succesfully");
 
+    }
+    @PostMapping("/v1/addasset")
+    public ResponseEntity<AssetResponse> addAsset(@RequestBody AddAssetRequest addAssetRequest){
+        LibraryAsset libraryAsset = libraryUserService.addAsset(addAssetRequest);
+        if(libraryAsset == null){
+            return ResponseEntity.badRequest().body(new AssetResponse());
+        } else {
+           // AssetResponse assetResponse = objectMapper.convertValue(libraryAsset1, AssetResponse.class);
+            AssetResponse assetResponse = new AssetResponse();
+            assetResponse.setAuthor(libraryAsset.getAuthor());
+            assetResponse.setDescription(libraryAsset.getDescription());
+            assetResponse.setPublishedAt(libraryAsset.getPublishedAt());
+            return ResponseEntity.ok(assetResponse);
+        }
+    }
+    @GetMapping("/v1/getasset")
+    public ResponseEntity<List<AssetResponse>> getAsset(@RequestParam("username") String username){
+        return ResponseEntity.ok().body(libraryUserService.findAssets(username));
     }
 
 }

@@ -6,12 +6,25 @@ import jakarta.persistence.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.security.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "library_user")
-@EntityListeners(UserEntityListeners.class)
+//@EntityListeners(UserEntityListeners.class)
 public class LibraryUser {
+
+    public List<LibraryAsset> getContribution() {
+        return contribution;
+    }
+
+    public void setContribution(List<LibraryAsset> contribution) {
+        this.contribution = contribution;
+    }
+
+    @OneToMany(mappedBy = "contributor", cascade = CascadeType.ALL, orphanRemoval = false)
+    private List<LibraryAsset> contribution = new ArrayList<>();
     public Long getId() {
         return id;
     }

@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>gfg-blr-9</artifactId>
+	<artifactId>advance-spring</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>gfg-blr-9</name>
 	<description>Demo project for Spring Boot</description>
