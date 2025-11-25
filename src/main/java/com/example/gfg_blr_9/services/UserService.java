@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 
@@ -42,7 +43,13 @@ public class UserService implements ApplicationContextAware {
         return this.redisDriver;
     }
 
+    public void init(){
+//        this.redisDriver = (RedisDriver)
+        applicationContext.getBean("redisDriverBean");
+        log.info(applicationContext.getBean("paymentServiceNew").toString());}
+
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
     }
 }

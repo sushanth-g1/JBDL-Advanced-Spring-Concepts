@@ -1,14 +1,19 @@
 package com.example.gfg_blr_9.services;
 
-import com.example.gfg_blr_9.enums.LibraryAssetType;
 import com.example.gfg_blr_9.enums.LibraryUserRoles;
 import com.example.gfg_blr_9.models.AddAssetRequest;
 import com.example.gfg_blr_9.models.AssetResponse;
 import com.example.gfg_blr_9.models.LibraryAsset;
 import com.example.gfg_blr_9.models.LibraryUser;
+import com.example.gfg_blr_9.pubsub.RedisMessagePublisher;
 import com.example.gfg_blr_9.repositories.LibraryAssetRepository;
 import com.example.gfg_blr_9.repositories.LibraryUserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -18,14 +23,43 @@ import java.util.UUID;
 
 @Service
 public class LibraryUserService {
+    private static final Logger log = LoggerFactory.getLogger(LibraryUserService.class);
     private LibraryUserRepository libraryUserRepository;
     private LibraryAssetRepository libraryAssetRepository;
+    private RedisCacheManager redisCacheManager;
+    private RedisTemplate<String,String> stringRedisTemplate2;
+    private RedisMessagePublisher publisher;
 
     @Autowired
-    public LibraryUserService(LibraryUserRepository libraryUserRepository, LibraryAssetRepository libraryAssetRepository){
+    public LibraryUserService(LibraryUserRepository libraryUserRepository, LibraryAssetRepository libraryAssetRepository, RedisCacheManager redisCacheManager, RedisTemplate<String,String> stringRedisTemplate2, RedisMessagePublisher publisher){
         this.libraryUserRepository = libraryUserRepository;
         this.libraryAssetRepository = libraryAssetRepository;
+        this.redisCacheManager = redisCacheManager;
+        this.stringRedisTemplate2 = stringRedisTemplate2;
+        this.publisher = publisher;
     }
+
+    public String getPassword(String username){
+
+//        Cache cache = redisCacheManager.getCache(username);
+//        if(cache != null && cache.get("password") != null){
+//            log.info("cache retained");
+//            return String.valueOf(cache.get("password"));
+//        }
+        if(this.stringRedisTemplate2.hasKey(username)){
+            log.info("cache retained using redis template");
+            publisher.publish("cache HIT for username : "+username);
+            return this.stringRedisTemplate2.opsForValue().get(username);
+        }
+        LibraryUser libraryUser = libraryUserRepository.findByUsername(username);
+        stringRedisTemplate2.opsForValue().set(username, libraryUser.getPassword());
+        //cache.put("password", libraryUser!= null ? libraryUser.getPassword() : "");
+        publisher.publish("cache MISS for username : "+username);
+        log.info("Cache written using redis template");
+        return String.valueOf(libraryUser!= null ? libraryUser.getPassword() : "");
+    }
+
+
 
     public LibraryUser register(String username, String password, LibraryUserRoles role){
         if (libraryUserRepository.findByUsername(username) != null ) {

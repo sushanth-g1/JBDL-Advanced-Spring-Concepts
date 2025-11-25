@@ -31,8 +31,8 @@ public class HealthController {
     private UserService userService;
 
 
-    @Autowired
-    private RedisDriver redisDriver;
+//    @Autowired
+//    private RedisDriver redisDriver;
 
     public HealthController(){
         log.info("HealthController getting initiated");

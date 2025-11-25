@@ -65,4 +65,9 @@ public class UserController {
         return ResponseEntity.ok().body(libraryUserService.findAssets(username));
     }
 
+    @GetMapping("/getPassword")
+    public String getPassword(@RequestParam String username){
+        return libraryUserService.getPassword(username);
+    }
+
 }

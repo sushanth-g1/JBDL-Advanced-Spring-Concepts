@@ -8,10 +8,14 @@ import com.example.gfg_blr_9.models.StudentInfo;
 import com.example.gfg_blr_9.repositories.StudentContactRepository;
 import com.example.gfg_blr_9.repositories.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+
 
 @Service
 public class StudentService {
@@ -26,7 +30,10 @@ public class StudentService {
         this.studentContactRepository = studentContactRepository;
     }
 
+
     public Student createStudent(StudentInfo studentInfo){
+
+
         Student student = new Student();
         student.setFirstName(studentInfo.getFirstName());
         student.setLastName(studentInfo.getLastName());
@@ -34,6 +41,7 @@ public class StudentService {
         contact.setEmail("email@mail.com");
         contact.setPhone("990202000");
         student.setContact(contact);
+
 
         StudentAddress studentAddress = new StudentAddress();
         studentAddress.setCountry("India");
